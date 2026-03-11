@@ -1,0 +1,24 @@
+# Never publish private skill variants
+skills/*-private/
+skills/**/private-*/
+skills/**/internal-*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# SQLite
+*.db
+*.db-wal
+*.db-shm
+
+# Local eval stack state
+llm-eval-power-stack/.env
+llm-eval-power-stack/.promptfoo/
+llm-eval-power-stack/.promptfoo-home/
+llm-eval-power-stack/runs/
