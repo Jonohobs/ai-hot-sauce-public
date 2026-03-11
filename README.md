@@ -119,6 +119,108 @@ Claude Code users: drop a `CLAUDE.md` in your project root for automatic session
 
 `learnings.md` captures solutions: problem, fix, date. When your AI hits the same issue months later, it finds this instead of rediscovering it.
 
+### Save Policy — Light by Default, Specific When Needed
+
+Most people do not use exact trigger phrases consistently. Design your rig around intent, not perfect wording.
+
+**Default save trigger:** If your message suggests pausing, closing, wrapping up, handing off, compacting, or saving, the agent should create a compact recovery handoff automatically.
+
+Examples that should all count:
+- `save`
+- `wrap up`
+- `before I close this`
+- `let's stop there`
+- `handoff`
+- `compact and save`
+- `save and clear`
+- `I'm done for now`
+
+**Specific save trigger:** If you call out something as especially important, the agent should keep the normal compact handoff and add one focused section for that item.
+
+Examples:
+- `save this research properly`
+- `make sure the fusion logic is preserved`
+- `save the exact commands`
+- `this bit matters`
+
+**What should save automatically:**
+- Goal and current task state
+- Decisions made and why (brief)
+- Files changed
+- Commands/runs that materially changed state
+- Output artifacts and their paths
+- Key metrics (test status, verts/faces, timings, costs) when relevant
+- Distilled subagent findings, but only if they changed the recommendation
+- Next recommended step
+- Blockers or deferred items
+
+**What should not save by default:**
+- Full conversation transcripts
+- Raw tool dumps
+- Long reasoning traces
+- Every subagent turn verbatim
+- Speculative brainstorming that did not affect next-step decisions
+
+**Good default split:**
+- Automatic for recovery
+- Manual for curation
+
+### Compact Handoff Format
+
+For ordinary "save before I close this" moments, keep the handoff short enough that another agent can load it fast:
+
+```md
+# Session Handoff
+
+- Goal:
+- Status:
+- What changed:
+- Key decisions:
+- Files touched:
+- Commands / runs worth knowing:
+- Artifacts / outputs:
+- Subagent findings:
+- Next step:
+- Blockers:
+```
+
+Target: 10-20 lines, no raw dumps.
+
+### Structured Artifact Log
+
+If the session produced concrete outputs, save a small machine-readable file alongside the handoff.
+
+Suggested fields:
+
+```json
+{
+  "timestamp": "2026-03-11T17:42:00Z",
+  "goal": "short task summary",
+  "artifacts": [
+    {
+      "path": "results/spaceship/fusion_v1/spaceship_consensus.glb",
+      "kind": "mesh",
+      "source_inputs": [
+        "results/spaceship/spaceship_colmap_masked_delaunay_e71ca8/spaceship_colmap_masked_delaunay.glb",
+        "results/spaceship/spaceship_hunyuan3d_nobg_92da27/spaceship_hunyuan_nobg.glb"
+      ],
+      "metrics": {
+        "vertices": 17410,
+        "faces": 36704,
+        "watertight": false
+      },
+      "params": {
+        "voxel_size": 0.008,
+        "min_votes": 2
+      }
+    }
+  ],
+  "next_step": "upgrade to Open3D point-cloud fusion"
+}
+```
+
+Do not load these logs by default every session. Read them only when resuming related work.
+
 ### RAG Search — Tiered Semantic Index
 
 ChromaDB + FlashRank reranker = search your knowledge by meaning, not just keywords. Organised in tiers so searches stay fast and relevant:
@@ -211,6 +313,42 @@ For quick tasks (<= 1 hour), use this to keep agents aligned:
 - Next step:
 ```
 
+### Cross-Agent Save Rules
+
+This rule works well across Claude Code, Codex, Gemini CLI, editor agents, and local wrappers:
+
+> If the user message suggests pausing, closing, saving, compacting, or handing off, create a compact recovery handoff automatically. Do not require exact trigger phrases. If the user highlights a specific item as important, add one focused section for it. Save full transcripts only when explicitly requested.
+
+Recommended behavior split:
+- **Automatic:** compact handoff, artifact metadata, short subagent findings, emergency save near context or token exhaustion
+- **Manual:** full archive exports, promotion into long-term memory/docs, unusually detailed research preservation
+
+This keeps sessions resumable without loading a pile of conversational sludge into the next one.
+
+### Rig Upgrade Capture Rule
+
+If a session discovers a reusable improvement to agent behavior, memory hygiene, hooks, handoffs, routing, review workflow, or safety policy, treat it as a Hot Sauce upgrade candidate.
+
+Default rule:
+- Add the improvement to this repo when it is generalisable beyond one project
+- Keep the write-up short and operational
+- Prefer updating existing guidance over scattering new files everywhere
+- If the idea is still unproven, mark it clearly as experimental
+
+Good candidates:
+- Better save / handoff triggers
+- New hook ideas that reduce repeated mistakes
+- Better subagent coordination rules
+- Lightweight logging patterns that improve recovery
+- Safety or review practices that clearly prevented risk
+
+Not good candidates:
+- One-off project trivia
+- Long transcripts
+- Preferences that only matter in a single repo
+
+This makes the rig improve itself over time instead of relying on you to remember, "we had a good idea three sessions ago."
+
 ---
 
 ## Models & Routing
@@ -298,6 +436,7 @@ Hooks are scripts that run before/after your AI does things. Claude Code has nat
 | **Post-tool memory** | After file writes | Auto-indexes new/changed files into your search system |
 | **Pre-compact** | Before context compression | Saves conversation state (decisions, learnings, task progress) to memory files |
 | **Audit log** | After bash commands | Logs what commands your AI ran (security + debugging) |
+| **Pause-save** | User signals pause/close/save | Writes compact handoff + artifact metadata, and adds one focused section if the user flagged something important |
 
 Pre-tool hooks pattern-match tool calls (e.g. CSS edits → centering checklist, `git push` → verify checklist) and inject the relevant practice. No match = no overhead. Note: hook injections add tokens — use lean mode (see Session Modes) for simple tasks.
 
