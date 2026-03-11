@@ -4,23 +4,23 @@
   <img src="logo.jpg" alt="AI Hot Sauce" width="300">
 </p>
 
-Drop this whole repo into Claude, Codex, Gemini or whatever you run and say:
+Drop this whole repo into Claude, Codex, Gemini, or your preferred AI tool and say:
 **"Build me the rig from AI Hot Sauce."**
 
-Or just chuck it into ChatGPT or Gemini if you want.
+You can also use it in ChatGPT or Gemini.
 
 ### Heat Levels 🌡️
 
-Pick your poison — your AI will tell you what fits.
+Choose the setup that fits your needs.
 
 - **Mild** — One CLI tool + model routing
 - **Medium** — Add persistent memory + hooks
 - **Ghost Pepper** — Full stack: voice input, MCP (CLI convenience plugins), local models, RAG search, dashboard
-- **Reaper** — Everything above + custom skills, subagent prompts, scheduled automation (all local-first where possible; home-grown, grass-fed Ol'lamas 🦙)
+- **Reaper** — Everything above + custom skills, subagent prompts, scheduled automation (all local-first where possible; self-hosted Ollama where useful)
 
 ---
 
-## Security — Don't Be Stupid
+## Security
 
 ### Deny List
 Block your AI from running dangerous commands. These should be denied by default:
@@ -36,7 +36,7 @@ Also block reading `~/.ssh/*` and any curl POST commands (prevents data exfiltra
 Log every bash command your AI runs to a CSV. Costs nothing, saves you when something goes wrong.
 
 ### File Backups
-Before your AI edits any file, copy the original to a backup folder. Cheap insurance.
+Before your AI edits any file, copy the original to a backup folder. It is a simple safeguard.
 
 ### Model Safety
 - **US/EU models only** if you care about data sovereignty (Meta, Google, Anthropic, OpenAI, Mistral)
@@ -80,7 +80,7 @@ Your AI forgets everything between sessions. Fix that.
 
 ### Know, Don't Infer
 
-When you ask your AI a question, it should check its memory and verify before answering — not guess from vibes. Add this rule to your config:
+When you ask your AI a question, it should check its memory and verify before answering rather than guessing. Add this rule to your config:
 
 > When asked a question, search memory files and verify before answering. Reason through it, look it up, confirm it. Don't infer when you can know.
 
@@ -109,7 +109,7 @@ Create a `~/.agent/memory/` folder with these files:
 - **Save before `/clear` or session end.** Context loss is painful.
 - **Attribution format:** `### [YYYY-MM-DD] Title` + `**Source:** Tool / Model`
 
-Claude Code users: drop a `CLAUDE.md` in your project root for automatic session loading. This is your behavioural config — vibe, rules, shortcuts, references.
+Claude Code users: drop a `CLAUDE.md` in your project root for automatic session loading. This is your behavioural config: rules, shortcuts, and references.
 
 ### Decision Log — The Most Underrated File
 
@@ -323,7 +323,7 @@ Recommended behavior split:
 - **Automatic:** compact handoff, artifact metadata, short subagent findings, emergency save near context or token exhaustion
 - **Manual:** full archive exports, promotion into long-term memory/docs, unusually detailed research preservation
 
-This keeps sessions resumable without loading a pile of conversational sludge into the next one.
+This keeps sessions resumable without carrying unnecessary conversational history into the next one.
 
 ### Rig Upgrade Capture Rule
 
@@ -353,7 +353,7 @@ This makes the rig improve itself over time instead of relying on you to remembe
 
 ## Models & Routing
 
-This guide was built with Claude Code, Codex and Grok 4.20. Claude's the chillest and most popular, but they all work. Take or leave any of these — ask your AI what they are and if you even want them.
+This guide was built with Claude Code, Codex, and Grok 4.20. They each have different strengths. Use the parts that fit your workflow.
 
 ### AI CLI Tools
 
@@ -386,9 +386,9 @@ python ask.py @gemini "explain this error"        # free
 python ask.py @gemini "describe this" --image screenshot.png  # free vision
 python ask.py @ollama "summarise this file"        # local, free
 ```
-Build your own or find one — the point is: don't open 4 different apps. One CLI, multiple backends.
+Build your own or use an existing router. The goal is one CLI with multiple backends instead of juggling several separate apps.
 
-### Local Models — 2-4GB GPU Friendly (Home-Grown, Grass-Fed Ol'lamas 🦙)
+### Local Models — 2-4GB GPU Friendly
 
 | Model | Size | Good for |
 |-------|------|----------|
@@ -397,7 +397,7 @@ Build your own or find one — the point is: don't open 4 different apps. One CL
 | **Mistral 7B** (Mistral AI) | ~4GB | Reasoning |
 | **CodeLlama** (Meta) | ~4GB | Code generation |
 
-Install via Ol'lama: `ollama pull phi4-mini` (yes, the real command is `ollama`)
+Install via Ollama: `ollama pull phi4-mini`
 
 ### Beware Agent Bias
 
@@ -532,7 +532,7 @@ No server needed — just a Python script that generates static HTML. Open in br
 
 ## Extra Toppings — Bonus Tools
 
-These aren't essential but they're worth knowing about. All free or self-hostable.
+These are optional, but worth knowing about. All are free or self-hostable.
 
 | Tool | What it does | Install |
 |------|-------------|---------|
@@ -542,13 +542,11 @@ These aren't essential but they're worth knowing about. All free or self-hostabl
 | **OpenCode** | Provider-agnostic coding agent. 75+ LLM providers through one terminal UI. Route Gemini or Ol'lama through a proper coding agent for free. | `npm i -g opencode-ai@latest` |
 | **LiteLLM** | API proxy — lets Claude-compatible tools talk to Gemini/Ol'lama instead. Point your client at localhost, save money. Uses official APIs only. | `pip install litellm` |
 | **OpenRouter** | Multi-model gateway. 200+ models, pay-per-token, no subscriptions. Good for agent health checks and fallback routing. | API key from openrouter.ai |
-| **Godot** | Open-source game engine. 2D/3D, GDScript (Python-like), ships to web/mobile/desktop. AI agents can write GDScript and scene files directly. Great for making games with your trusty Hot Sauce-powered dev bot. | Free, [godotengine.org](https://godotengine.org) |
+| **Godot** | Open-source game engine. 2D/3D, GDScript (Python-like), ships to web/mobile/desktop. AI agents can write GDScript and scene files directly. Useful if you want to experiment with AI-assisted game development. | Free, [godotengine.org](https://godotengine.org) |
 
 ---
 
 ## Clawd's Claws 🦀 — Screen Pointer Overlay
-
-Clawd's claws ain't working right, grabbing at damn near everything — the claws want what they want.
 
 A pixel art claw in Claude orange that slides out from the screen edge, grabs at whatever you point it at, and talks to you through a speech bubble. Think of it as your AI's physical hand reaching into your screen.
 
@@ -572,7 +570,7 @@ A pixel art claw in Claude orange that slides out from the screen edge, grabs at
 ### How to Use It
 
 ```bash
-# Demo mode — watch it go, clamp clamp
+# Demo mode
 python overlay.py --demo
 
 # Normal mode — watches instruction.json for targets
@@ -594,7 +592,7 @@ instruction.json  ←  Your AI writes this (or point.py for testing)
    overlay.py     ←  Polls JSON every 250ms, animates claw to target
 ```
 
-Escape to quit. That's it. The claws do the rest.
+Press Escape to quit.
 
 ### Pixel Art Toolkit 🐾
 
@@ -606,7 +604,7 @@ Also in the box: a set of Python scripts for generating and rendering pixel art 
 - `terminal_preview.py` — ANSI art → self-contained HTML page
 - `analyze_sprite.py` — reverse-engineer sprites from screenshots
 
-**The catch:** These are rough. Some bugs, some unfinished features. That's the point — grab them, feed them to your AI, and see if you can get them working.
+**Note:** These are rough. Some parts are unfinished or buggy. The intent is to give you something concrete to improve with your AI.
 
 **Try it:** Tell your AI "Here's a pixel art toolkit with some bugs. Help me get it working and make a new sprite."
 
@@ -648,4 +646,4 @@ Also in the box: a set of Python scripts for generating and rendering pixel art 
 
 ---
 
-*Built by trial, error, and a lot of tokens. Feed this to your AI and tell it to help you set up whatever looks useful.*
+*Built through iteration and testing. Use it as a starting point, then keep the parts that are useful for your setup.*
