@@ -646,4 +646,4 @@ Also in the box: a set of Python scripts for generating and rendering pixel art 
 
 ---
 
-*Built through iteration and testing. Use it as a starting point, then keep the parts that are useful for your setup.*
+*Use this as a starting point. Then keep the parts that are useful for your setup.*
